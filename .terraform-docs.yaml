@@ -33,7 +33,7 @@ content: |-
 
   ```hcl
   module "example" {
-    source  = "wanted-cloud/..."
+    source  = "wanted-cloud/cognitive-account/azure"
     version = "x.y.z"
   }
   ```
