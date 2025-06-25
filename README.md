@@ -49,7 +49,7 @@ The following input variables are optional (have default values):
 
 ### <a name="input_custom_question_answering_search_service_id"></a> [custom\_question\_answering\_search\_service\_id](#input\_custom\_question\_answering\_search\_service\_id)
 
-Description: Search service ID for custom question answering. This attribute is only set when kind is TextAnalytics
+Description: Search service ID for custom question answering. This attribute is only set when kind is TextAnalytics.
 
 Type: `string`
 
@@ -57,7 +57,7 @@ Default: `""`
 
 ### <a name="input_custom_question_answering_search_service_key"></a> [custom\_question\_answering\_search\_service\_key](#input\_custom\_question\_answering\_search\_service\_key)
 
-Description: Search service key for custom question answering. This attribute is only set when kind is TextAnalytics
+Description: Search service key for custom question answering. This attribute is only set when kind is TextAnalytics.
 
 Type: `string`
 
@@ -89,13 +89,14 @@ list(object({
       format  = string
       version = optional(string, null)
     })
-    sku = object({
+    sku = optional(object({
       name     = string
-      tier     = optional(string, null)
-      size     = optional(string, null)
-      family   = optional(string, null)
-      capacity = optional(string, null)
-    })
+      capacity = optional(number, null)
+    }), null)
+    scale = optional(object({
+      type     = string
+      capacity = number
+    }), null)
   }))
 ```
 
@@ -177,7 +178,7 @@ Default: `{}`
 
 ### <a name="input_metrics_advisor_aad_client_id"></a> [metrics\_advisor\_aad\_client\_id](#input\_metrics\_advisor\_aad\_client\_id)
 
-Description: Client ID for Azure Active Directory authentication for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor
+Description: Client ID for Azure Active Directory authentication for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor.
 
 Type: `string`
 
@@ -185,7 +186,7 @@ Default: `""`
 
 ### <a name="input_metrics_advisor_aad_tenant_id"></a> [metrics\_advisor\_aad\_tenant\_id](#input\_metrics\_advisor\_aad\_tenant\_id)
 
-Description: Tenant ID for Azure Active Directory authentication for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor
+Description: Tenant ID for Azure Active Directory authentication for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor.
 
 Type: `string`
 
@@ -193,7 +194,7 @@ Default: `""`
 
 ### <a name="input_metrics_advisor_super_user_name"></a> [metrics\_advisor\_super\_user\_name](#input\_metrics\_advisor\_super\_user\_name)
 
-Description: Super user name for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor
+Description: Super user name for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor.
 
 Type: `string`
 
@@ -201,7 +202,7 @@ Default: `""`
 
 ### <a name="input_metrics_advisor_website_name"></a> [metrics\_advisor\_website\_name](#input\_metrics\_advisor\_website\_name)
 
-Description: Website name for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor
+Description: Website name for Metrics Advisor. This attribute is only set when kind is MetricsAdvisor.
 
 Type: `string`
 
@@ -221,7 +222,7 @@ Description: Network rule bypass option for the Cognitive account.
 
 Type: `string`
 
-Default: `"None"`
+Default: `"Deny"`
 
 ### <a name="input_network_rules_ip_rules"></a> [network\_rules\_ip\_rules](#input\_network\_rules\_ip\_rules)
 
@@ -248,7 +249,7 @@ Default: `[]`
 
 ### <a name="input_outbound_network_access_restricted"></a> [outbound\_network\_access\_restricted](#input\_outbound\_network\_access\_restricted)
 
-Description: Restrict outbound network access for the Cognitive account. This attribute is only set when kind is MetricsAdvisor
+Description: Restrict outbound network access for the Cognitive account. This attribute is only set when kind is MetricsAdvisor.
 
 Type: `bool`
 
@@ -256,7 +257,7 @@ Default: `false`
 
 ### <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled)
 
-Description: Enable public network access for the Cognitive account. This attribute is only set when kind is MetricsAdvisor
+Description: Enable public network access for the Cognitive account. This attribute is only set when kind is MetricsAdvisor.
 
 Type: `bool`
 
@@ -292,7 +293,7 @@ Description: List of user assigned identity IDs for the Azure service plan.
 
 Type: `list(string)`
 
-Default: `""`
+Default: `[]`
 
 ## Outputs
 
@@ -334,6 +335,19 @@ The minimal usage for the module is as follows:
 ```hcl
 module "template" {
     source = "../.."
+
+    name                = "example-cogacct"
+    resource_group_name = "example-rg"
+    location            = "North Europe"
+    kind                = "OpenAI"
+    sku_name            = "S0"
+    custom_subdomain_name = "examplecogacctsubdomain"
+    tags                = { environment = "test" }
+
+    #network_rules_bypass_option = "None"
+    #network_rules_default_action = "Deny"
+    #network_rules_ip_rules = ["1.2.3.4"]
+    #network_rules_virtual_network_rules = []
 }
 ```
 ## Contributing
