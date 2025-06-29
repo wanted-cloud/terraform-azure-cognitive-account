@@ -52,4 +52,23 @@ resource "azurerm_cognitive_account" "this" {
       identity_ids = var.user_assigned_identity_ids
     }
   }
+
+  timeouts {
+    create = try(
+      local.metadata.resource_timeouts["azurerm_cognitive_account"]["create"],
+      local.metadata.resource_timeouts["default"]["create"]
+    )
+    read = try(
+      local.metadata.resource_timeouts["azurerm_cognitive_account"]["read"],
+      local.metadata.resource_timeouts["default"]["read"]
+    )
+    update = try(
+      local.metadata.resource_timeouts["azurerm_cognitive_account"]["update"],
+      local.metadata.resource_timeouts["default"]["update"]
+    )
+    delete = try(
+      local.metadata.resource_timeouts["azurerm_cognitive_account"]["delete"],
+      local.metadata.resource_timeouts["default"]["delete"]
+    )
+  }
 }

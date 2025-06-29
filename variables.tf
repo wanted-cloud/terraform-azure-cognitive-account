@@ -77,7 +77,7 @@ variable "network_rules_bypass_option" {
 variable "network_rules_default_action" {
   description = "Network rule bypass option for the Cognitive account."
   type        = string
-  default     = "Deny"
+  default     = ""
 }
 
 variable "network_rules_ip_rules" {
@@ -98,8 +98,8 @@ variable "network_rules_virtual_network_rules" {
 variable "deployments" {
   description = "List of deployments configuration to create for the Cognitive account."
   type = list(object({
-    name                       = string
-    cognitive_account_id       = string
+    name = string
+    //cognitive_account_id       = string
     dynamic_throttling_enabled = optional(bool, false)
     rai_policy_name            = optional(string, null)
     version_upgrade_option     = optional(string, "OnceNewDefaultVersionAvailable")
