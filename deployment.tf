@@ -4,7 +4,7 @@ resource "azurerm_cognitive_deployment" "this" {
   name                 = each.value.name
   cognitive_account_id = azurerm_cognitive_account.this.id
 
-  dynamic_throttling_enabled = var.dynamic_throttling_enabled
+  dynamic_throttling_enabled = each.value.dynamic_throttling_enabled
   rai_policy_name            = each.value.rai_policy_name
   version_upgrade_option     = each.value.version_upgrade_option
 
