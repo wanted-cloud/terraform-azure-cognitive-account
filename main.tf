@@ -10,7 +10,7 @@ resource "azurerm_cognitive_account" "this" {
   resource_group_name                          = data.azurerm_resource_group.this.name
   kind                                         = var.kind
   sku_name                                     = var.sku_name
-  custom_subdomain_name                        = var.custom_subdomain_name != "" ? var.custom_subdomain_name : null
+  custom_subdomain_name                        = var.custom_subdomain_name != "" ? var.custom_subdomain_name : var.name
   dynamic_throttling_enabled                   = var.dynamic_throttling_enabled
   fqdns                                        = var.fqdns
   local_auth_enabled                           = var.local_auth_enabled

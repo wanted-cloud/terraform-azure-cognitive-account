@@ -65,7 +65,7 @@ Default: `""`
 
 ### <a name="input_custom_subdomain_name"></a> [custom\_subdomain\_name](#input\_custom\_subdomain\_name)
 
-Description: Custom subdomain name for the Cognitive account.
+Description: Custom subdomain name for the Cognitive account. Defaults to the account name when not set.
 
 Type: `string`
 

@@ -33,7 +33,7 @@ variable "tags" {
 }
 
 variable "custom_subdomain_name" {
-  description = "Custom subdomain name for the Cognitive account."
+  description = "Custom subdomain name for the Cognitive account. Defaults to the account name when not set."
   type        = string
   default     = ""
 }
