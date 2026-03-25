@@ -14,6 +14,7 @@ resource "azurerm_cognitive_account" "this" {
   dynamic_throttling_enabled                   = var.dynamic_throttling_enabled
   fqdns                                        = var.fqdns
   local_auth_enabled                           = var.local_auth_enabled
+  project_management_enabled                   = var.project_management_enabled
   metrics_advisor_aad_client_id                = var.metrics_advisor_aad_client_id != "" ? var.metrics_advisor_aad_client_id : null
   metrics_advisor_aad_tenant_id                = var.metrics_advisor_aad_tenant_id != "" ? var.metrics_advisor_aad_tenant_id : null
   metrics_advisor_super_user_name              = var.metrics_advisor_super_user_name != "" ? var.metrics_advisor_super_user_name : null

@@ -171,5 +171,56 @@ variable "custom_question_answering_search_service_id" {
 variable "custom_question_answering_search_service_key" {
   description = "Search service key for custom question answering. This attribute is only set when kind is TextAnalytics."
   type        = string
+  sensitive   = true
   default     = ""
+}
+
+variable "project_management_enabled" {
+  description = "Enable project management on the Cognitive account. Required when projects is non-empty. Can only be set to true when kind is set to AIServices."
+  type        = bool
+  default     = false
+}
+
+variable "projects" {
+  description = "List of project configurations to create for the Cognitive account. Requires project_management_enabled = true, kind = AIServices, a managed identity, and custom_subdomain_name."
+  type = list(object({
+    name         = string
+    location     = optional(string, "")
+    description  = optional(string, null)
+    display_name = optional(string, null)
+    tags         = optional(map(string), {})
+    identity = object({
+      type         = string
+      identity_ids = optional(list(string), [])
+    })
+  }))
+  default = []
+}
+
+variable "rai_blocklists" {
+  description = "List of RAI blocklist configurations to create for the Cognitive account."
+  type = list(object({
+    name        = string
+    description = optional(string, null)
+    tags        = optional(map(string), {})
+  }))
+  default = []
+}
+
+variable "rai_policies" {
+  description = "List of RAI policy configurations to create for the Cognitive account."
+  type = list(object({
+    name             = string
+    base_policy_name = string
+    mode             = optional(string, "Default")
+    tags             = optional(map(string), {})
+    content_filters = optional(list(object({
+      name               = string
+      filter_enabled     = bool
+      block_enabled      = bool
+      severity_threshold = string
+      source             = string
+    })), [])
+  }))
+  default = []
 }

@@ -25,7 +25,7 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>=4.20.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (4.65.0)
 
 ## Required Inputs
 
@@ -255,6 +255,36 @@ Type: `bool`
 
 Default: `false`
 
+### <a name="input_project_management_enabled"></a> [project\_management\_enabled](#input\_project\_management\_enabled)
+
+Description: Enable project management on the Cognitive account. Required when projects is non-empty. Can only be set to true when kind is set to AIServices.
+
+Type: `bool`
+
+Default: `false`
+
+### <a name="input_projects"></a> [projects](#input\_projects)
+
+Description: List of project configurations to create for the Cognitive account. Requires project\_management\_enabled = true, kind = AIServices, a managed identity, and custom\_subdomain\_name.
+
+Type:
+
+```hcl
+list(object({
+    name         = string
+    location     = optional(string, "")
+    description  = optional(string, null)
+    display_name = optional(string, null)
+    tags         = optional(map(string), {})
+    identity = object({
+      type         = string
+      identity_ids = optional(list(string), [])
+    })
+  }))
+```
+
+Default: `[]`
+
 ### <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled)
 
 Description: Enable public network access for the Cognitive account. This attribute is only set when kind is MetricsAdvisor.
@@ -270,6 +300,46 @@ Description: QnA runtime endpoint for the Cognitive account.
 Type: `string`
 
 Default: `""`
+
+### <a name="input_rai_blocklists"></a> [rai\_blocklists](#input\_rai\_blocklists)
+
+Description: List of RAI blocklist configurations to create for the Cognitive account.
+
+Type:
+
+```hcl
+list(object({
+    name        = string
+    description = optional(string, null)
+    tags        = optional(map(string), {})
+  }))
+```
+
+Default: `[]`
+
+### <a name="input_rai_policies"></a> [rai\_policies](#input\_rai\_policies)
+
+Description: List of RAI policy configurations to create for the Cognitive account.
+
+Type:
+
+```hcl
+list(object({
+    name             = string
+    base_policy_name = string
+    mode             = optional(string, "Default")
+    tags             = optional(map(string), {})
+    content_filters = optional(list(object({
+      name               = string
+      filter_enabled     = bool
+      block_enabled      = bool
+      severity_threshold = string
+      source             = string
+    })), [])
+  }))
+```
+
+Default: `[]`
 
 ### <a name="input_sku_name"></a> [sku\_name](#input\_sku\_name)
 
@@ -299,19 +369,34 @@ Default: `[]`
 
 The following outputs are exported:
 
-### <a name="output_congnitive_account"></a> [congnitive\_account](#output\_congnitive\_account)
+### <a name="output_cognitive_account"></a> [cognitive\_account](#output\_cognitive\_account)
 
 Description: The Cognitive account resource.
 
-### <a name="output_congnitive_account_deployments"></a> [congnitive\_account\_deployments](#output\_congnitive\_account\_deployments)
+### <a name="output_cognitive_account_deployments"></a> [cognitive\_account\_deployments](#output\_cognitive\_account\_deployments)
 
 Description: The Cognitive account deployment resources.
+
+### <a name="output_cognitive_account_projects"></a> [cognitive\_account\_projects](#output\_cognitive\_account\_projects)
+
+Description: The Cognitive account project resources.
+
+### <a name="output_cognitive_account_rai_blocklists"></a> [cognitive\_account\_rai\_blocklists](#output\_cognitive\_account\_rai\_blocklists)
+
+Description: The Cognitive account RAI blocklist resources.
+
+### <a name="output_cognitive_account_rai_policies"></a> [cognitive\_account\_rai\_policies](#output\_cognitive\_account\_rai\_policies)
+
+Description: The Cognitive account RAI policy resources.
 
 ## Resources
 
 The following resources are used by this module:
 
 - [azurerm_cognitive_account.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cognitive_account) (resource)
+- [azurerm_cognitive_account_project.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cognitive_account_project) (resource)
+- [azurerm_cognitive_account_rai_blocklist.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cognitive_account_rai_blocklist) (resource)
+- [azurerm_cognitive_account_rai_policy.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cognitive_account_rai_policy) (resource)
 - [azurerm_cognitive_deployment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cognitive_deployment) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) (data source)
 
@@ -334,15 +419,15 @@ The minimal usage for the module is as follows:
 
 ```hcl
 module "template" {
-    source = "../.."
+  source = "../.."
 
-    name                = "example-cogacct"
-    resource_group_name = "example-rg"
-    location            = "Germany West Central"
-    kind                = "OpenAI"
-    sku_name            = "S0"
-    custom_subdomain_name = "examplecogacctsubdomain"
-    tags                = { environment = "test" }
+  name                  = "example-cogacct"
+  resource_group_name   = "example-rg"
+  location              = "Germany West Central"
+  kind                  = "OpenAI"
+  sku_name              = "S0"
+  custom_subdomain_name = "examplecogacctsubdomain"
+  tags                  = { environment = "test" }
 }
 ```
 ## Contributing
